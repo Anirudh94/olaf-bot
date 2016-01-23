@@ -1,5 +1,6 @@
-var login = require("facebook-chat-api")
-    prompt = require('prompt');
+var login = require("facebook-chat-api"),
+    prompt = require('prompt'),
+    argv = require('yargs').argv;
 
 var commands = [
 	"\"olaf help\": get help",
@@ -7,9 +8,16 @@ var commands = [
 	"\"olaf insult <name>\": get olaf to insult <name>"
 ];
 
+prompt.override = argv;
 prompt.start();
 /* Meet Olaf */
-prompt.get(['email', 'password'], function (err, result) {
+prompt.get(['email', {
+    name: 'password',
+    hidden: true,
+    conform: function (value) {
+        return true; 
+    }
+}], function (err, result) {
 	login({email: result.email, password: result.password}, function callback (err, api) {
 		if(err) return console.error(err);
 
