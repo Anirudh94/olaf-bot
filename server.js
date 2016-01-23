@@ -3,16 +3,16 @@ var login = require("facebook-chat-api"),
     argv = require('yargs').argv;
 
 var commands = [
-	"\"Olaf help\": get help",
-	"\"Olaf hi/hey\": say hello to olaf",
-	"\"Olaf insult <name>\": get olaf to insult <name>"
+    "\"Olaf help\": get help",
+    "\"Olaf hi/hey\": say hello to olaf",
+    "\"Olaf insult <name>\": get olaf to insult <name>"
 ];
 
 // TODO: this is a temporary store of insults
 // will be moved to JSON/DB or use online API  
 var insults = [
-	"Fuck you",
-	"Suck ma snowy dick"
+    "Fuck you",
+    "Suck ma snowy dick"
 ];
 
 prompt.override = argv;
@@ -21,27 +21,32 @@ prompt.start();
 prompt.get(['email', {
     name: 'password',
     hidden: true,
-    conform: function (value) {
-        return true; 
+    conform: function(value) {
+        return true;
     }
-}], function (err, result) {
-	/* Meet Olaf */
-	login({email: result.email, password: result.password}, function callback (err, api) {
-		if(err) return console.error(err);
+}], function(err, result) {
+    /* Meet Olaf */
+    login({
+        email: result.email,
+        password: result.password
+    }, function callback(err, api) {
+        if (err) return console.error(err);
 
-		api.setOptions({listenEvents: true});
+        api.setOptions({
+            listenEvents: true
+        });
 
-		var stopListening = api.listen(function(err, event) {
-			if(err) return console.error(err);
+        var stopListening = api.listen(function(err, event) {
+            if (err) return console.error(err);
 
-			switch(event.type) {
-				case "message":
+            switch (event.type) {
+                case "message":
                     var cmdStr = event.body.trim().toLowerCase();
-					var cmd = cmdStr.split(" ");
-					var res = "";
-					
-					if (cmdStr.indexOf("olaf") > -1) {
-                        if(cmd[0] === "olaf") {
+                    var cmd = cmdStr.split(" ");
+                    var res = "";
+
+                    if (cmdStr.indexOf("olaf") > -1) {
+                        if (cmd[0] === "olaf") {
                             // initiate command recognition
                             switch (cmd[1]) {
                                 case "help":
@@ -50,18 +55,18 @@ prompt.get(['email', {
                                         res += commands[i] + "\n";
                                     }
                                     break;
-                                case "hi": 
+                                case "hi":
                                     //fall through
                                 case "hey":
                                     res = "sup " + event.senderName.split(" ")[0] + "?";
                                     break;
                                 case "insult":
-                                    if(cmd.length >= 3) {
+                                    if (cmd.length >= 3) {
                                         var name = "";
                                         for (var i = 2; i < cmd.length; i++) {
                                             name += " " + cmd[i];
                                         }
-                                        var rndIndex = Math.floor((Math.random() * 1000)%insults.length);
+                                        var rndIndex = Math.floor((Math.random() * 1000) % insults.length);
                                         var insult = insults[rndIndex];
                                         res = insult + name;
                                         break;
@@ -71,7 +76,7 @@ prompt.get(['email', {
                             }
                         } else {
                             //unrecognized command
-                            res = "wtf do you want " + event.senderName.split(" ")[0] +"?"
+                            res = "wtf do you want " + event.senderName.split(" ")[0] + "?"
                         }
 
                         console.log("command:" + cmd);
@@ -79,14 +84,14 @@ prompt.get(['email', {
                         api.sendMessage(res, event.threadID);
                     }
 
-					api.markAsRead(event.threadID, function(err) {
-						if(err) console.log(err);
-					});
-					break;
-				case "event":
-					console.log(event);
-					break;
-			}
-		});
-	});
+                    api.markAsRead(event.threadID, function(err) {
+                        if (err) console.log(err);
+                    });
+                    break;
+                case "event":
+                    console.log(event);
+                    break;
+            }
+        });
+    });
 });
