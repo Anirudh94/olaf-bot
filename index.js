@@ -3,9 +3,16 @@ var login = require("facebook-chat-api"),
     argv = require('yargs').argv;
 
 var commands = [
-	"\"olaf help\": get help",
-	"\"hi/hey olaf\": say hello to olaf",
-	"\"olaf insult <name>\": get olaf to insult <name>"
+	"\"Olaf help\": get help",
+	"\"Olaf hi/hey\": say hello to olaf",
+	"\"Olaf insult <name>\": get olaf to insult <name>"
+];
+
+// TODO: this is a temporary store of insults
+// will be moved to JSON/DB or use online API  
+var insults = [
+	"Fuck you",
+	"Suck ma snowy dick"
 ];
 
 prompt.override = argv;
@@ -18,6 +25,7 @@ prompt.get(['email', {
         return true; 
     }
 }], function (err, result) {
+	/* Meet Olaf */
 	login({email: result.email, password: result.password}, function callback (err, api) {
 		if(err) return console.error(err);
 
@@ -28,27 +36,39 @@ prompt.get(['email', {
 
 			switch(event.type) {
 				case "message":
-					var cmd = event.body.trim().toLowerCase();
+                    var cmdStr = event.body.trim().toLowerCase();
+					var cmd = cmdStr.split(" ");
 					var res = "";
-
-					if(cmd.indexOf("olaf help") > -1) {
-						res = "list of commands:\n\n";
-						for (var i in commands) {
-  						res += commands[i] + "\n";
+					
+					if (cmdStr.indexOf("olaf") > -1 && cmd[0] === "olaf") {
+						// initiate command recognition
+						switch (cmd[1]) {
+							case "help":
+								res = "list of commands:\n\n";
+								for (var i in commands) {
+									res += commands[i] + "\n";
+								}
+							case "hi": 
+								//fall through
+							case "hey":
+								res = "sup " + event.senderName.split(" ")[0] + "?";
+							case "insult":
+								if(cmd.length >= 3) {
+									var name = "";
+									for (var i = 2; i < cmd.length; i++) {
+										name += " " + cmd[i];
+									}
+									var rndIndex = Math.floor((Math.random() * 1000)%insults.length);
+									var insult = insults[rndIndex];
+									res = insult + name;
+								} else {
+									res = "wtf dude?"
+								}
 						}
-					} else if(cmd.indexOf("hey olaf") > -1 || cmd.indexOf("hi olaf") > -1) {
-						res = "sup?";
-					} else if(cmd.indexOf("olaf insult") > -1) {
-						cmd = cmd.split(" ");
-						if(cmd.length >= 3) {
-							var name = "";
-							for (var i = 2; i < cmd.length; i++) {
-								name += " " + cmd[i];
-							}
-							res = "Fuck you," + name + "\n - " + event.senderName.split(" ")[0];
-						} else {
-							res = "wtf dude?"
-						}
+							
+					} else {
+						//unrecognized command
+						res = "wtf do you want " + event.senderName.split(" ")[0] +"?"
 					}
 
 					console.log("command:" + cmd);
