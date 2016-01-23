@@ -1,6 +1,9 @@
 var login = require("facebook-chat-api"),
     prompt = require('prompt'),
-    argv = require('yargs').argv;
+    argv = require('yargs').argv,
+    logger = require('./logger');
+
+logger.debugLevel = 'info';
 
 var commands = [
     "\"Olaf help\": get help",
