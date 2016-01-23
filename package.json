@@ -1,10 +1,39 @@
 {
   "name": "olaf-bot",
   "version": "0.0.1",
-  "private": true,
+  "description": "A rude facebook bot named Olaf",
+  "author": "Anirudh Mukundan <m.anirudh94@gmail.com>",
+  "contributors": [{
+    "name": "Anirudh Mukundan",
+    "email": "m.anirudh94@gmail.com"
+  }],
+  "scripts": {
+    "test": "",
+    "start": "node server.js",
+    "predeploy": "echo Olaf awakes from his slumber",
+    "postdeploy": "echo Olaf is up!",
+    "prepublish": ""
+  },
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Anirudh94/olaf-bot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Anirudh94/olaf-bot/issues"
+  },
+  "keywords": [
+    "olaf",
+    "bot",
+    "chutiya"
+  ],
   "dependencies": {
     "yargs": "*",
     "prompt": "*",
     "facebook-chat-api": "*"
-  }
+  },
+  "devDependencies": {
+  },
+  "preferGlobal": true,
+  "private": true
 }
