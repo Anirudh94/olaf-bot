@@ -69,10 +69,12 @@ prompt.get(['email', {
                                         var rndIndex = Math.floor((Math.random() * 1000) % insults.length);
                                         var insult = insults[rndIndex];
                                         res = insult + name;
-                                        break;
+                                    } else {
+                                        res = "wtf dude?";
                                     }
+                                    break;
                                 default:
-                                    res = "wtf dude?";
+                                    res = "I'm sorry, I can't hear you over the sound of how awesome I am";
                             }
                         } else {
                             //unrecognized command
