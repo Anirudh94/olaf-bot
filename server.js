@@ -40,40 +40,44 @@ prompt.get(['email', {
 					var cmd = cmdStr.split(" ");
 					var res = "";
 					
-					if (cmdStr.indexOf("olaf") > -1 && cmd[0] === "olaf") {
-						// initiate command recognition
-						switch (cmd[1]) {
-							case "help":
-								res = "list of commands:\n\n";
-								for (var i in commands) {
-									res += commands[i] + "\n";
-								}
-							case "hi": 
-								//fall through
-							case "hey":
-								res = "sup " + event.senderName.split(" ")[0] + "?";
-							case "insult":
-								if(cmd.length >= 3) {
-									var name = "";
-									for (var i = 2; i < cmd.length; i++) {
-										name += " " + cmd[i];
-									}
-									var rndIndex = Math.floor((Math.random() * 1000)%insults.length);
-									var insult = insults[rndIndex];
-									res = insult + name;
-								} else {
-									res = "wtf dude?"
-								}
-						}
-							
-					} else {
-						//unrecognized command
-						res = "wtf do you want " + event.senderName.split(" ")[0] +"?"
-					}
+					if (cmdStr.indexOf("olaf") > -1) {
+                        if(cmd[0] === "olaf") {
+                            // initiate command recognition
+                            switch (cmd[1]) {
+                                case "help":
+                                    res = "list of commands:\n\n";
+                                    for (var i in commands) {
+                                        res += commands[i] + "\n";
+                                    }
+                                    break;
+                                case "hi": 
+                                    //fall through
+                                case "hey":
+                                    res = "sup " + event.senderName.split(" ")[0] + "?";
+                                    break;
+                                case "insult":
+                                    if(cmd.length >= 3) {
+                                        var name = "";
+                                        for (var i = 2; i < cmd.length; i++) {
+                                            name += " " + cmd[i];
+                                        }
+                                        var rndIndex = Math.floor((Math.random() * 1000)%insults.length);
+                                        var insult = insults[rndIndex];
+                                        res = insult + name;
+                                        break;
+                                    }
+                                default:
+                                    res = "wtf dude?";
+                            }
+                        } else {
+                            //unrecognized command
+                            res = "wtf do you want " + event.senderName.split(" ")[0] +"?"
+                        }
 
-					console.log("command:" + cmd);
-					console.log("sending:" + res);
-					api.sendMessage(res, event.threadID);
+                        console.log("command:" + cmd);
+                        console.log("sending:" + res);
+                        api.sendMessage(res, event.threadID);
+                    }
 
 					api.markAsRead(event.threadID, function(err) {
 						if(err) console.log(err);
