@@ -30,7 +30,8 @@
   "dependencies": {
     "yargs": "*",
     "prompt": "*",
-    "facebook-chat-api": "*"
+    "facebook-chat-api": "*",
+    "cheerio": "*"
   },
   "devDependencies": {
   },
