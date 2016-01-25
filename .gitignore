@@ -1,5 +1,8 @@
 # Dependency directory
 node_modules
 
-#IDE settings
+# IDE settings
 .vscode
+
+# Backup files
+*~
