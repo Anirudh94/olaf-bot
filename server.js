@@ -54,7 +54,6 @@ var fuckoff_request = function(params, callback) {
 
 prompt.override = argv;
 prompt.start();
-/* Meet Olaf */
 prompt.get(['email', {
     name: 'password',
     hidden: true,
@@ -62,7 +61,6 @@ prompt.get(['email', {
         return true;
     }
 }], function(err, result) {
-    /* Meet Olaf */
     login({
         email: result.email,
         password: result.password
