@@ -98,6 +98,13 @@ prompt.get(['email', {
                                     res = "sup " + event.senderName.split(" ")[0] + "?";
                                     api.sendMessage(res, event.threadID);
                                     break;
+                                case "B_naughty":
+                                 res = "Sure! " + event.senderName.split(" ")[0] + "the cold never bothered her anyway!";
+                                 api.sendMessage(res, event.threadID);
+                                 var naughty = {url: "http://bit.ly/1ZZWW" + cmd[2]};
+                                 api.sendMessage(naughty, event.threadID);
+                                 break;
+                                 //the secret code is p0
                                 case "insult":
                                     if (cmd.length == 4) {
                                         var params = {
