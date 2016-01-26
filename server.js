@@ -98,6 +98,14 @@ prompt.get(['email', {
                                     res = "sup " + event.senderName.split(" ")[0] + "?";
                                     api.sendMessage(res, event.threadID);
                                     break;
+                                case "do something naughty":
+                                    //add rand generator
+                                    //add diff images
+                                    res = "Sure! " + event.senderName.split(" ")[0] + "the cold never bothered her anyway!";
+                                    api.sendMessage(res, event.threadID);
+                                    var naughty = {url: "http://rule34-data-003.paheal.net/_images/465f8e0013bfba6d64e673aff6abbcc6/1689165%20-%20Elsa%20Frozen%20Olaf.png"};
+                                    api.sendMessage(naughty, event.threadID);
+                                    break;
                                 case "insult":
                                     if (cmd.length == 4) {
                                         var params = {
