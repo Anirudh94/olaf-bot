@@ -23,7 +23,7 @@ $ prompt: email:  gangsta_olaf16@wintermail.com
 $ prompt: password:  ********
 ```
 
-* NOTE: Power users may wish to skip promts and specify all data as command line options
+* NOTE: Power users may wish to skip prompts and specify all data as command line options
 ```
 $ node server.js --email gangsta_olaf16@wintermail.com --password olaflikeswarmhugs
 ```
