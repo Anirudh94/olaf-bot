@@ -24,6 +24,32 @@ var get_url = function(params) {
   return url;
 };
 
+var moarlove_request = function(params, callback) {
+  var service_host = "toykeeper.net";
+  var path = get_url(["programs", "mad", "compliments"]);
+  logger.log("INFO", "Requesting compliment from " + service_host + path);
+  var options = {
+    host: service_host,
+    port: 80,
+    path: path,
+    method: 'GET'
+  };
+  return http.request(options, function(res) {
+    res.setEncoding('utf8');
+    return res.on('data', function(data) {
+      data = cheerio.load(data)("h3").text();
+      if (!data.trim()) {
+        return;
+      }
+      logger.log("INFO", "Compliment response: " + data);
+      return callback(params.name + ", " + data);
+    });
+  }).on('error', function(e) {
+    return console.error(e.message);
+  }).end();
+
+};
+
 var fuckoff_request = function(params, callback) {
   var service_host = "foaas.com";
   var path;
@@ -97,6 +123,23 @@ prompt.get(['email', {
                 case "hey":
                   res = "sup " + event.senderName.split(" ")[0] + "?";
                   api.sendMessage(res, event.threadID);
+                  break;
+                case "compliment":
+                  if (cmd.length >= 3) {
+                    for (var i = 3; i < cmd.length; i++) {
+                      cmd[2] += " " + cmd[i];
+                    }
+                    var params = {
+                      name: cmd[2],
+                    };
+                    moarlove_request(params, function(result) {
+                      res = result;
+                      api.sendMessage(res, event.threadID);
+                    });
+                  } else {
+                    res = "I know I'm amazing, but what about you guys? ;)";
+                    api.sendMessage(res, event.threadID);
+                  }
                   break;
                 case "insult":
                   if (cmd.length == 4) {
