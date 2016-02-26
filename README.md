@@ -1,4 +1,6 @@
 # olaf-bot
+
+[![Join the chat at https://gitter.im/Anirudh94/olaf-bot](https://badges.gitter.im/Anirudh94/olaf-bot.svg)](https://gitter.im/Anirudh94/olaf-bot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 A rude facebook bot named after the enchanted snowman Olaf, from Disney's Frozen.
 
 #Installation
