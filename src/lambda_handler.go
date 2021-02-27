@@ -14,7 +14,7 @@ import (
 const discordApplicationPublicKey = "8cab6f3901ac6dddf7c7d5db2e9292998e784915106f7e96c70ccc061cbd3e3d"
 
 func handleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	fmt.Printf("Processing request data for request %s.\n", request.Body)
+	fmt.Println("Processing request data for request: ", request.Body)
 
 	var discordInteraction discord.Interaction
 	err := json.Unmarshal([]byte(request.Body), &discordInteraction)
@@ -23,15 +23,20 @@ func handleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (
 	}
 
 	// Verify the request is indeed from discord'
-	if !discord.VerifyInteraction(&request, discordApplicationPublicKey) {
-		return handleUnauthorized("Invalid request signature")
+	if !discord.VerifyInteraction(request.Body, request.Headers, discordApplicationPublicKey) {
+		return handleUnauthorized("invalid request signature")
 	}
 
 	// See details of handling discord interactions: https://discord.com/developers/docs/interactions/slash-commands#receiving-an-interaction
 	switch discordInteraction.Type {
 	case discord.Ping:
-		// ACK a PING message
-		return events.APIGatewayProxyResponse{Body: fmt.Sprintf("{ type: %v }", discord.Pong), StatusCode: 200}, nil
+		response, err := json.Marshal(discord.InteractionResponse{
+			Type: discord.Pong,
+		})
+		if err != nil {
+			return handleError("Encountered error marshalling InteractionResponse: " + err.Error())
+		}
+		return events.APIGatewayProxyResponse{Body: string(response), StatusCode: 200}, nil
 	case discord.ApplicationCommand:
 		// TODO: Just echoing back for now
 		response, err := json.Marshal(discord.InteractionResponse{

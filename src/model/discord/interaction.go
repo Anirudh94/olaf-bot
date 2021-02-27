@@ -5,8 +5,6 @@ import (
 	"bytes"
 	"crypto/ed25519"
 	"encoding/hex"
-
-	"github.com/aws/aws-lambda-go/events"
 )
 
 type InteractionType int64
@@ -52,7 +50,7 @@ type GuildMember struct {
 }
 
 type User struct {
-	ID            int64  `json:"id"`
+	ID            string `json:"id"`
 	Username      string `json:"username"`
 	Avatar        string `json:"avatar"`
 	Discriminator string `json:"discriminator"`
@@ -88,10 +86,8 @@ type InteractionApplicationCommandCallbackData struct {
 
 // VerifyInteraction does AuthN/Z on the request: https://discord.com/developers/docs/interactions/slash-commands#security-and-authorization
 // This is mostly copy paste from discordgo: https://github.com/bwmarrin/discordgo/blob/ad76e324502b76c7507178ed07b242841c0724a4/interactions.go
-func VerifyInteraction(r *events.APIGatewayProxyRequest, hexPublicKey string) bool {
-	var msg bytes.Buffer
-
-	signature := r.Headers["X-Signature-Ed25519"]
+func VerifyInteraction(body string, headers map[string]string, hexPublicKey string) bool {
+	signature := headers["x-signature-ed25519"]
 	if signature == "" {
 		return false
 	}
@@ -105,7 +101,7 @@ func VerifyInteraction(r *events.APIGatewayProxyRequest, hexPublicKey string) bo
 		return false
 	}
 
-	timestamp := r.Headers["X-Signature-Timestamp"]
+	timestamp := headers["x-signature-timestamp"]
 	if timestamp == "" {
 		return false
 	}
@@ -115,7 +111,5 @@ func VerifyInteraction(r *events.APIGatewayProxyRequest, hexPublicKey string) bo
 		return false
 	}
 
-	msg.WriteString(timestamp + r.Body)
-
-	return ed25519.Verify(key, msg.Bytes(), sig)
+	return ed25519.Verify(key, []byte(timestamp+body), sig)
 }
