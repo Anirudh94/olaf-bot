@@ -1,15 +1,12 @@
 import requests
 
-application_id=""
-guild_id=""
-bot_token=""
-url = f"https://discord.com/api/v8/applications/{application_id}/guilds/{guild_id}/commands"
-headers = {
-    "Authorization": f"Bot {bot_token}"
-}
-
-# See https://discord.com/developers/docs/interactions/slash-commands#create-global-application-command
-json = {
+""" Script Inputs """
+application_id = ""
+guild_id = ""  # aka server ID
+bot_token = ""
+command_id = ""
+create_command_body = {
+    # See https://discord.com/developers/docs/interactions/slash-commands#create-global-application-command
     "name": "blep",
     "description": "Send a random adorable animal photo",
     "options": [
@@ -42,11 +39,42 @@ json = {
     ]
 }
 
-r = requests.post(url, headers=headers, json=json)
-print(r.status_code)
-print(r.json())
+headers = {
+    "Authorization": f"Bot {bot_token}"
+}
 
-print("Getting commands to see if it has been updated")
-r = requests.get(url, headers=headers)
-print(r.status_code)
-print(r.json())
+
+def get_commands(guild_id=None):
+    print("Getting commands to see if it has been updated")
+    if guild_id != None:
+        url = f"https://discord.com/api/v8/applications/{application_id}/guilds/{guild_id}/commands"
+    else:
+        url = f"https://discord.com/api/v8/applications/{application_id}/commands"
+    r = requests.get(url, headers=headers)
+    print(r.status_code)
+    print(r.json())
+
+
+def create_command(guild_id=None):
+    if guild_id != None:
+        url = f"https://discord.com/api/v8/applications/{application_id}/guilds/{guild_id}/commands"
+    else:
+        url = f"https://discord.com/api/v8/applications/{application_id}/commands"
+    r = requests.post(url, headers=headers, json=create_command_body)
+    print(r.status_code)
+    print(r.json())
+
+
+def delete_command(guild_id=None):
+    if guild_id != None:
+        url = f"https://discord.com/api/v8/applications/{application_id}/guilds/{guild_id}/commands/{command_id}"
+    else:
+        url = f"https://discord.com/api/v8/applications/{application_id}/commands/{command_id}"
+    r = requests.delete(url, headers=headers)
+    print(r.status_code)
+
+
+if __name__ == "__main__":
+    # create_command()
+    get_commands()
+    # delete_command()
