@@ -12,7 +12,7 @@ import (
 const (
 	// CommandToken for image handler
 	CommandToken  string = "image"
-	keywordOption string = "keyword"
+	keywordOption string = "keywords"
 )
 
 // HandleCommand for image handler

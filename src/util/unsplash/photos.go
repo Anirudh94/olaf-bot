@@ -3,6 +3,7 @@ package unsplash
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -50,6 +51,7 @@ func GetRandomPhoto(accessKey string, keywords []string, collectionID string) (s
 	query := strings.Join(keywords, ",")
 	url := generateUnsplashURL(accessKey, query, collectionID)
 
+	fmt.Println("calling url: ", url)
 	resp, err := http.Get(url)
 	if err != nil {
 		return "", err
