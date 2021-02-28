@@ -4,6 +4,9 @@ package discord
 import (
 	"crypto/ed25519"
 	"encoding/hex"
+
+	// We will slowly replace parts of these manual typings with the ones in the common library when they become available
+	"github.com/bwmarrin/discordgo"
 )
 
 type InteractionType int64
@@ -77,10 +80,10 @@ type InteractionResponse struct {
 }
 
 type InteractionApplicationCommandCallbackData struct {
-	TTS             bool          `json:"tts,omitempty"`
-	Content         string        `json:"content"`
-	Embeds          []interface{} `json:"embeds,omitempty"`
-	AllowedMentions []interface{} `json:"allowed_mentions,omitempty"`
+	TTS             bool                             `json:"tts,omitempty"`
+	Content         string                           `json:"content"`
+	Embeds          []discordgo.MessageEmbed           `json:"embeds,omitempty"`
+	AllowedMentions discordgo.MessageAllowedMentions `json:"allowed_mentions,omitempty"`
 }
 
 // VerifyInteraction does AuthN/Z on the request: https://discord.com/developers/docs/interactions/slash-commands#security-and-authorization
