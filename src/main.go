@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 
@@ -13,7 +14,7 @@ import (
 	"github.com/Anirudh94/olaf-bot/util/discord"
 )
 
-// Environment variables
+// Global state variables
 var (
 	discordApplicationPublicKey string = os.Getenv("DISCORD_APPLICATION_PUBLIC_KEY")
 	unsplashClientID            string = os.Getenv("UNSPLASH_CLIENT_ID")
@@ -23,17 +24,32 @@ func main() {
 	lambda.Start(handleRequest)
 }
 
+func assertEnvVariablePresent() error {
+	if discordApplicationPublicKey == "" {
+		return errors.New("DISCORD_APPLICATION_PUBLIC_KEY environment variable not present")
+	}
+	if discordApplicationPublicKey == "" {
+		return errors.New("UNSPLASH_CLIENT_ID environment variable not present")
+	}
+	return nil
+}
+
 func handleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	fmt.Println("Processing request data for request: ", request.Body)
 
+	err := assertEnvVariablePresent()
+	if err != nil {
+		return *errorResp(err.Error()), nil
+	}
+
 	var interaction discord.Interaction
-	err := json.Unmarshal([]byte(request.Body), &interaction)
+	err = json.Unmarshal([]byte(request.Body), &interaction)
 	if err != nil {
 		return *errorResp("Encountered error unmarshalling Interaction: " + err.Error()), nil
 	}
 
 	// Verify the request is indeed from discord
-	if !discord.VerifyInteraction(request.Body, request.Headers, discordApplicationPublicKey) {
+	if !discord.VerifyInteraction(&request.Body, &request.Headers, &discordApplicationPublicKey) {
 		return *unauthorizedResp("invalid request signature"), nil
 	}
 

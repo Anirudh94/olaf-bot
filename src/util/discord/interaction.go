@@ -88,8 +88,8 @@ type InteractionApplicationCommandCallbackData struct {
 
 // VerifyInteraction does AuthN/Z on the request: https://discord.com/developers/docs/interactions/slash-commands#security-and-authorization
 // This is mostly copy paste from discordgo: https://github.com/bwmarrin/discordgo/blob/ad76e324502b76c7507178ed07b242841c0724a4/interactions.go
-func VerifyInteraction(body string, headers map[string]string, hexPublicKey string) bool {
-	signature := headers["x-signature-ed25519"]
+func VerifyInteraction(body *string, headers *map[string]string, hexPublicKey *string) bool {
+	signature := (*headers)["x-signature-ed25519"]
 	if signature == "" {
 		return false
 	}
@@ -103,15 +103,15 @@ func VerifyInteraction(body string, headers map[string]string, hexPublicKey stri
 		return false
 	}
 
-	timestamp := headers["x-signature-timestamp"]
+	timestamp := (*headers)["x-signature-timestamp"]
 	if timestamp == "" {
 		return false
 	}
 
-	key, err := hex.DecodeString(hexPublicKey)
+	key, err := hex.DecodeString(*hexPublicKey)
 	if err != nil {
 		return false
 	}
 
-	return ed25519.Verify(key, []byte(timestamp+body), sig)
+	return ed25519.Verify(key, []byte(timestamp+(*body)), sig)
 }
