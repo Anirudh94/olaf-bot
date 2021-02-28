@@ -16,14 +16,13 @@ import (
 // Environment variables
 var (
 	discordApplicationPublicKey string = os.Getenv("DISCORD_APPLICATION_PUBLIC_KEY")
-	unsplashClientID string = os.Getenv("UNSPLASH_CLIENT_ID")
+	unsplashClientID            string = os.Getenv("UNSPLASH_CLIENT_ID")
 )
 
 func main() {
 	lambda.Start(handleRequest)
 }
 
-// TODO: see if we can return pointer to apig response instead
 func handleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	fmt.Println("Processing request data for request: ", request.Body)
 
@@ -47,7 +46,6 @@ func handleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (
 			Type: discord.Pong,
 		})
 	case discord.ApplicationCommand:
-		// TODO: Just echoing back for now
 		callbackData := routeToCorrectHandler(&interaction.Data)
 		response = successResp(&discord.InteractionResponse{
 			Type: discord.ChannelMessageWithSource,

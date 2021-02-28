@@ -82,7 +82,7 @@ type InteractionResponse struct {
 type InteractionApplicationCommandCallbackData struct {
 	TTS             bool                             `json:"tts,omitempty"`
 	Content         string                           `json:"content"`
-	Embeds          []discordgo.MessageEmbed           `json:"embeds,omitempty"`
+	Embeds          []discordgo.MessageEmbed         `json:"embeds,omitempty"`
 	AllowedMentions discordgo.MessageAllowedMentions `json:"allowed_mentions,omitempty"`
 }
 
