@@ -8,7 +8,7 @@ You may find `/scripts/register_command.py` useful to create/get/delete [slash c
 
 The main code base is in `/src` using the [Go](https://golang.org/) programming language.
 
-# Features
+## Features
 It's gonna have whatever features I personally want.
 
 What's available:
