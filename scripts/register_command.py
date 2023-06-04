@@ -2,39 +2,21 @@ import requests
 
 """ Script Inputs """
 application_id = ""
-guild_id = ""  # aka server ID
+guild_id = None  # aka server ID
 bot_token = ""
 command_id = ""
+""" End script inputs """
+
 create_command_body = {
     # See https://discord.com/developers/docs/interactions/slash-commands#create-global-application-command
-    "name": "blep",
-    "description": "Send a random adorable animal photo",
+    "name": "image",
+    "description": "Send a random photo",
     "options": [
         {
-            "name": "animal",
-            "description": "The type of animal",
+            "name": "keywords",
+            "description": "Keywords of the photo",
             "type": 3,
             "required": True,
-            "choices": [
-                {
-                    "name": "Dog",
-                    "value": "animal_dog"
-                },
-                {
-                    "name": "Cat",
-                    "value": "animal_cat"
-                },
-                {
-                    "name": "Penguin",
-                    "value": "animal_penguin"
-                }
-            ]
-        },
-        {
-            "name": "only_smol",
-            "description": "Whether to show only baby animals",
-            "type": 5,
-            "required": False
         }
     ]
 }
@@ -75,6 +57,6 @@ def delete_command(guild_id=None):
 
 
 if __name__ == "__main__":
-    # create_command()
-    get_commands()
-    # delete_command()
+    # create_command(guild_id=guild_id)
+    get_commands(guild_id=guild_id)
+    # delete_command(guild_id=guild_id)
